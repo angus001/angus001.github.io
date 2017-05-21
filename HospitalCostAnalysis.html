@@ -37,7 +37,8 @@
 <body>
 	
 	<h1> Hospital Cost in Different States of US </h1>
-	<p> The following data visualizations explores the cost of hospital inpatients based on DRG. They are based on top 100 common diagnoses from CMS database. </p>
+	<p> The following data visualizations explores the cost of hospital inpatients based on DRG. </p>
+	<p> They are based on top 100 common diagnoses from CMS database. </p>
 	<p> Refer <a href="https://www.data.gov/health/highlights">here</a> for CMS data information. </p>
 	
 
@@ -75,9 +76,10 @@
 				  }];
 
 
-				  var layout = {
+				  var layout1 = {
 					  title: 'Average Hospital Inpatient Cost In Different States',
 					  width: 900,
+					  margin: {t: 30,l:50},
 					  geo:{
 						  scope: 'usa',
 						  showlakes: true,
@@ -86,7 +88,7 @@
 					  }
 				  };
 
-				  Plotly.plot(myDiv1, data, layout, {showLink: false});
+				  Plotly.plot(myDiv1, data, layout1, {showLink: false});
 					});
 	</script>	
 
@@ -97,7 +99,7 @@
 	<p> Within the same color group, those closer to x-axis and y-axis are more cost efficient. </p>
 	<p> Alabama has the lowest hospital cost and lowest living cost.</p>
 	<br>
-	<p><b> ** Click on the legend to shows only select groups. <b></p> 
+	<p> ** Click on the legend to shows only select groups. </p> 
 	<div id= "myDiv"> </div>
 	<script>
 			
@@ -127,15 +129,15 @@
 					  }
 				  };
 				});
-				var layout = {
+				var layout2 = {
 				  xaxis: {title: 'Living Expense Level'},
 				  yaxis: {title: 'Average Inpatient Hospital Cost', type: 'log'},
-				  margin: {t: 30},
+				  margin: {t: 30,l:120},
 				  height: 700,
 				  width: 1200,
 				  hovermode: 'closest'
 				};
-			Plotly.plot('myDiv', data, layout, {showLink: false});
+			Plotly.plot('myDiv', data, layout2, {showLink: false});
 			});
 	</script>			
 
@@ -218,14 +220,14 @@
 
 				var data = [trace1];
 
-				var layout = {
+				var layout3 = {
 					title:'Inpatient Cost By DRG Diagnosis Across Different States',
-					margin: {t: 120},
+					margin: {t: 120, l:120},
 					height: 550,
 					width: 800
 				};
 
-				Plotly.newPlot('plotDiv', data, layout);
+				Plotly.newPlot('plotDiv', data, layout3);
 			};
 
 			var innerContainer = document.querySelector('[data-num="0"'),
