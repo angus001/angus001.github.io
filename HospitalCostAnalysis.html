@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+
+<html>
+
+	
+	
+ <head>
+        
+        <title>Hospital Costs vs Living Expense Level</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		
+		<style> 
+		h1 {  text-align: center; }	
+		body { background-color: babyblue; }
+		p1{ text-indent: 45px; }
+		p { text-indent: 55px; } </style>
+		
+<!--			
+		<style>
+
+			.chart div {
+			  font: 10px sans-serif;
+			  background-color: steelblue;
+			  text-align: right;
+			  padding: 3px;
+			  margin: 1px;
+			  color: white;
+			}
+
+		</style>
+		<div class="chart"></div>
+
+-->
+        
+</head>
+
+<body>
+	
+	<h1> Hospital Cost in Different States of US </h1>
+	<p> The following data visualizations explores the cost of hospital inpatients based on DRG. They are based on top 100 common diagnoses from CMS database. </p>
+	<p> Refer <a href="https://www.data.gov/health/highlights">here</a> for CMS data information. </p>
+	
+
+<div id= "myDiv1"> </div>
+	<script>		
+			Plotly.d3.csv('https://raw.githubusercontent.com/angus001/Data608/master/Project/hospitalcosttype.csv', function(err, rows){
+				  function unpack(rows, key) {
+					  return rows.map(function(row) { return row[key]; });
+				  }
+
+				  var data = [{
+					  type: 'choropleth',
+					  locationmode: 'USA-states',
+					  locations: unpack(rows, 'stateid'),
+					  z: unpack(rows, 'pop'),
+					  text: unpack(rows, 'state'),
+					  zmin: 0,
+					  zmax: 17000,
+					  colorscale: [
+						  [0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
+						  [0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
+						  [0.8, 'rgb(214,57,154)'], [1, 'rgb(119,28,84)']
+						  //[0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
+					  ],
+					  colorbar: {
+						  title: 'USD In Thousands',
+						  thickness: 12
+					  },
+					  marker: {
+						  line:{
+							  color: 'rgb(255,255,255)',
+							  width: 2
+						  }
+					  }
+				  }];
+
+
+				  var layout = {
+					  title: 'Average Hospital Inpatient Cost In Different States',
+					  width: 900,
+					  geo:{
+						  scope: 'usa',
+						  showlakes: true,
+						  lakecolor: 'rgb(255,255,255)'
+						  
+					  }
+				  };
+
+				  Plotly.plot(myDiv1, data, layout, {showLink: false});
+					});
+	</script>	
+
+
+<!-- start of chart 2 -->
+	<p> <font color="blue" size = "5"> Seond Data Visualization </font></p>
+    <p> The following chart shows hospital cost relative to the living expense using data from <a href="https://www.bea.gov/newsreleases/regional/rpp/rpp_newsrelease.htm">bea.gov</a>. </p>
+	<p> Within the same color group, those closer to x-axis and y-axis are more cost efficient. </p>
+	<p> Alabama has the lowest hospital cost and lowest living cost.</p>
+	<br>
+	<p><b> ** Click on the legend to shows only select groups. <b></p> 
+	<div id= "myDiv"> </div>
+	<script>
+			
+			Plotly.d3.csv('https://raw.githubusercontent.com/angus001/Data608/master/Project/hospitalcosttype.csv', function(err, rows){
+			//Plotly.d3.csv('C:\Users\angusoo07\Documents\GitHub\Data608\Project\hospitalcosttype.csv',function(err, rows){
+				var YEAR = 2014;
+				var grouping = ['High', 'Low', 'Medium', 'Very High', 'Very Low'];
+				var POP_TO_PX_SIZE = 2e1;
+				function unpack(rows, key) {
+				  return rows.map(function(row) { return row[key]; });
+				}
+
+				var data = grouping.map(function(category) {
+				  var rowsFiltered = rows.filter(function(row) {
+					  return (row.category === category); //&& (+row.year === YEAR);
+				  });
+				  return {
+					  mode: 'markers',
+					  name: category,
+					  x: unpack(rowsFiltered, 'lifeExp'),
+					  y: unpack(rowsFiltered, 'gdpPercap'),
+					  text: unpack(rowsFiltered, 'state'),
+					  marker: {
+						  sizemode: 'area',
+						  size: unpack(rowsFiltered, 'pop'),
+						  sizeref: POP_TO_PX_SIZE
+					  }
+				  };
+				});
+				var layout = {
+				  xaxis: {title: 'Living Expense Level'},
+				  yaxis: {title: 'Average Inpatient Hospital Cost', type: 'log'},
+				  margin: {t: 30},
+				  height: 700,
+				  width: 1200,
+				  hovermode: 'closest'
+				};
+			Plotly.plot('myDiv', data, layout, {showLink: false});
+			});
+	</script>			
+
+	<!-- start of chart 3 -->
+	<br>
+	<p> <font color = 'blue' size = '5'> Third Data Visualization </font></p>
+	<p> DRG, "Diagnosis Related Group", is used to classify patients and services rendered at hospital.</p> 
+	<p>	So that hospitals can be appropriately reimbursed based on the treatment of the patients.</p> 
+	<p>	To learn more about DRG, click
+	 <a href="https://en.wikipedia.org/wiki/Diagnosis-related_group">here</a>. </p>
+	
+	<p><b> ** Select the desired DRG from the dropdown menu to see the cost in different states <b></p>
+	
+	<br>
+	<div class="showcase__section" id="bubble">
+		<div class="spacer --small"></div>
+		<div id="bubbleplots">
+		<div class="bubbleplot" data-num="0">
+		<div class="control-row">
+		DRG: <select class="countrydata">
+		</select>
+		</div>
+		
+		
+		<div class="plot" id="plotDiv"></div>
+		
+		</div>
+		</div>
+	</div>
+
+	
+	<script>
+	
+		Plotly.d3.csv('https://raw.githubusercontent.com/angus001/Data608/master/Project/DRGcost.csv', function(err, rows){
+
+			function unpack(rows, key) {
+				return rows.map(function(row) { return row[key]; });
+			}
+
+			var allCountryNames = unpack(rows, 'DRG'),
+				allYear = unpack(rows, 'StateID'),
+				allGdp = unpack(rows, 'AverageCost'),
+				listofCountries = [],
+				currentCountry,
+				currentGdp = [],
+				currentYear = [];
+
+			for (var i = 0; i < allCountryNames.length; i++ ){
+				if (listofCountries.indexOf(allCountryNames[i]) === -1 ){
+					listofCountries.push(allCountryNames[i]);
+				}
+			}
+
+			function getCountryData(chosenCountry) {
+				currentGdp = [];
+				currentYear = [];
+				for (var i = 0 ; i < allCountryNames.length ; i++){
+					if ( allCountryNames[i] === chosenCountry ) {
+						currentGdp.push(allGdp[i]);
+						currentYear.push(allYear[i]);
+					}
+				}
+			};
+
+			// Default Country Data
+			setBubblePlot('313 - CHEST PAIN');
+
+			function setBubblePlot(chosenCountry) {
+				getCountryData(chosenCountry);
+
+				var trace1 = {
+					x: currentYear,
+					y: currentGdp,
+					mode: 'lines+markers',
+					marker: {
+						size: 12,
+						opacity: 0.5
+					}
+				};
+
+				var data = [trace1];
+
+				var layout = {
+					title:'Inpatient Cost By DRG Diagnosis Across Different States',
+					margin: {t: 120},
+					height: 550,
+					width: 800
+				};
+
+				Plotly.newPlot('plotDiv', data, layout);
+			};
+
+			var innerContainer = document.querySelector('[data-num="0"'),
+				plotEl = innerContainer.querySelector('.plot'),
+				countrySelector = innerContainer.querySelector('.countrydata');
+
+			function assignOptions(textArray, selector) {
+				for (var i = 0; i < textArray.length;  i++) {
+					var currentOption = document.createElement('option');
+					currentOption.text = textArray[i];
+					selector.appendChild(currentOption);
+				}
+			}
+
+			assignOptions(listofCountries, countrySelector);
+
+			function updateCountry(){
+				setBubblePlot(countrySelector.value);
+			}
+
+			countrySelector.addEventListener('change', updateCountry, false);
+		});
+			
+	</script>
+				
+			
+
+</body>
+
+</html> 

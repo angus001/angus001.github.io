@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+
+<html>
+
+	<p><b> Hospital Cost in Different State</b></p>
+ <head>
+        
+        <title>Angus D3 Template</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<!--			
+		<style>
+
+			.chart div {
+			  font: 10px sans-serif;
+			  background-color: steelblue;
+			  text-align: right;
+			  padding: 3px;
+			  margin: 1px;
+			  color: white;
+			}
+
+		</style>
+		<div class="chart"></div>
+
+-->
+        
+</head>
+
+<body>
+	<div id= "myDiv"> </div>
+	<script>
+			
+			Plotly.d3.csv ("https://raw.githubusercontent.com/angus001/Data608/master/Project/simpledata.csv", function(err,rows)
+			{
+				function unpack(rows,key)
+				{
+					return rows.map(function(row)
+					{return row[key];});
+				}
+			
+		
+					var data = [
+						  {
+							x: unpack(rows, 'State'),
+							
+							y: unpack(rows,'AvgPaid'),
+							
+							//mode: 'markers',
+							// type: 'scatter'
+							type: 'bar'
+							//name: 'HospitalCost'
+						  }
+						];
+
+					var layout = {
+			
+							height: 500,
+							width: 500
+						}
+
+						Plotly.newPlot('myDiv', data, layout);
+			});
+	</script>
+</body>
+
+</html>
